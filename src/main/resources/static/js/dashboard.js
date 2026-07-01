@@ -4,10 +4,6 @@ const sideMenu = document.getElementById("sideMenu");
 const modal = document.getElementById("alertModal");
 const newAlertButton = document.getElementById("newAlertButton");
 const cancelButton = document.getElementById("cancelButton");
-
-const searchInput = document.getElementById("searchInput");
-const severityFilter = document.getElementById("severityFilter");
-const statusFilter = document.getElementById("statusFilter");
 const saveAlertButton = document.getElementById("saveAlertButton");
 
 const newSeverity = document.getElementById("newSeverity");
@@ -15,30 +11,21 @@ const newHost = document.getElementById("newHost");
 const newTitle = document.getElementById("newTitle");
 const newStatus = document.getElementById("newStatus");
 
-let allAlerts = [];
+const searchInput = document.getElementById("searchInput");
+const severityFilter = document.getElementById("severityFilter");
+const statusFilter = document.getElementById("statusFilter");
 
-// ======================
-// Sidebar
-// ======================
+let allAlerts = [];
 
 menuButton.addEventListener("click", () => {
     sideMenu.classList.toggle("open");
 });
 
 document.addEventListener("click", (event) => {
-
-    if (
-        !sideMenu.contains(event.target) &&
-        !menuButton.contains(event.target)
-    ) {
+    if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
     }
-
 });
-
-// ======================
-// Modal
-// ======================
 
 newAlertButton.addEventListener("click", () => {
     modal.classList.add("show");
@@ -48,14 +35,10 @@ cancelButton.addEventListener("click", () => {
     modal.classList.remove("show");
 });
 
-// Close modal when clicking outside
-
 window.addEventListener("click", (event) => {
-
     if (event.target === modal) {
         modal.classList.remove("show");
     }
-
 });
 
 saveAlertButton.addEventListener("click", async () => {
@@ -82,78 +65,42 @@ saveAlertButton.addEventListener("click", async () => {
     await loadAlerts();
 });
 
-// ======================
-// Filters
-// ======================
-
 searchInput.addEventListener("input", filterAlerts);
 severityFilter.addEventListener("change", filterAlerts);
 statusFilter.addEventListener("change", filterAlerts);
 
-// ======================
-// Load Alerts
-// ======================
-
 async function loadAlerts() {
-
     const response = await fetch("/api/alerts");
-
     allAlerts = await response.json();
 
     displayAlerts(allAlerts);
-
 }
 
-// ======================
-// Filter Alerts
-// ======================
-
 function filterAlerts() {
-
     const search = searchInput.value.toLowerCase();
-
     const severity = severityFilter.value;
-
     const status = statusFilter.value;
 
     const filteredAlerts = allAlerts.filter(alert => {
-
         const matchesSearch =
-
             alert.host.toLowerCase().includes(search) ||
-
             alert.title.toLowerCase().includes(search) ||
-
             alert.severity.toLowerCase().includes(search) ||
-
             alert.status.toLowerCase().includes(search);
 
         const matchesSeverity =
-
-            severity === "" ||
-
-            alert.severity === severity;
+            severity === "" || alert.severity === severity;
 
         const matchesStatus =
-
-            status === "" ||
-
-            alert.status === status;
+            status === "" || alert.status === status;
 
         return matchesSearch && matchesSeverity && matchesStatus;
-
     });
 
     displayAlerts(filteredAlerts);
-
 }
 
-// ======================
-// Display Alerts
-// ======================
-
 function displayAlerts(alerts) {
-
     const tableBody = document.querySelector("#alertsTable tbody");
 
     tableBody.innerHTML = "";
@@ -164,13 +111,11 @@ function displayAlerts(alerts) {
     let low = 0;
 
     let total = alerts.length;
-
     let open = 0;
     let investigating = 0;
     let closed = 0;
 
     alerts.forEach(alert => {
-
         if (alert.severity === "Critical") critical++;
         else if (alert.severity === "High") high++;
         else if (alert.severity === "Medium") medium++;
@@ -196,14 +141,51 @@ function displayAlerts(alerts) {
             <td>${alert.title}</td>
 
             <td>
-                <span class="status-badge">
-                    ${alert.status}
-                </span>
+                <select class="status-select" data-id="${alert.id}">
+                    <option ${alert.status === "Open" ? "selected" : ""}>Open</option>
+                    <option ${alert.status === "Investigating" ? "selected" : ""}>Investigating</option>
+                    <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
+                </select>
+            </td>
+
+            <td>
+                <button class="delete-button" data-id="${alert.id}">
+                    Delete
+                </button>
             </td>
         `;
 
         tableBody.appendChild(row);
+    });
 
+    document.querySelectorAll(".status-select").forEach(select => {
+        select.addEventListener("change", async () => {
+            const alertId = select.getAttribute("data-id");
+
+            await fetch(`/api/alerts/${alertId}/status`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: select.value
+                })
+            });
+
+            await loadAlerts();
+        });
+    });
+
+    document.querySelectorAll(".delete-button").forEach(button => {
+        button.addEventListener("click", async () => {
+            const alertId = button.getAttribute("data-id");
+
+            await fetch(`/api/alerts/${alertId}`, {
+                method: "DELETE"
+            });
+
+            await loadAlerts();
+        });
     });
 
     document.getElementById("criticalCount").textContent = critical;
@@ -215,9 +197,6 @@ function displayAlerts(alerts) {
     document.getElementById("openCount").textContent = open;
     document.getElementById("investigatingCount").textContent = investigating;
     document.getElementById("closedCount").textContent = closed;
-
 }
-
-// ======================
 
 loadAlerts();
