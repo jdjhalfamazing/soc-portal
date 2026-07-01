@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incidents</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<button id="menuButton" class="menu-button">☰</button>
+
+<nav id="sideMenu" class="side-menu">
+    <h2>SOC Portal</h2>
+
+    <a href="/">Dashboard</a>
+    <a href="/incidents">Incidents</a>
+</nav>
+
+<header class="topbar">
+
+    <div class="topbar-left">
+        <h1>Incident Management</h1>
+        <p>Track Security Incidents</p>
+    </div>
+
+    <div class="topbar-right">
+        👤 Joseph Jordan
+    </div>
+
+</header>
+
+<main>
+
+<section class="alerts">
+
+    <div class="alerts-header">
+        <h2>Incidents</h2>
+
+        <button id="newIncidentButton" class="new-alert-button">
+            + New Incident
+        </button>
+    </div>
+
+    <div class="filters">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search incidents...">
+
+        <select id="priorityFilter">
+            <option value="">All Priorities</option>
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option>Open</option>
+            <option>Investigating</option>
+            <option>Closed</option>
+        </select>
+
+    </div>
+
+    <table id="incidentTable">
+
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Incident #</th>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Assigned To</th>
+            <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody></tbody>
+
+    </table>
+
+</section>
+
+</main>
+
+<div id="incidentModal" class="modal">
+    <div class="modal-content">
+
+        <h2>Create Incident</h2>
+
+        <input type="text" id="incidentNumber" placeholder="Incident Number">
+
+        <input type="text" id="incidentTitle" placeholder="Incident Title">
+
+        <select id="incidentPriority">
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <select id="incidentStatus">
+            <option>Open</option>
+            <option>Investigating</option>
+            <option>Closed</option>
+        </select>
+
+        <input type="text" id="assignedTo" placeholder="Assigned To">
+
+        <textarea id="incidentDescription" rows="5" placeholder="Incident Description"></textarea>
+
+        <div class="modal-buttons">
+            <button id="saveIncidentButton">Save Incident</button>
+            <button id="cancelIncidentButton">Cancel</button>
+        </div>
+
+    </div>
+</div>
+<script src="/js/incidents.js"></script>
+
+</body>
+
+</html>
