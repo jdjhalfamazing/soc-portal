@@ -1,37 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incidents</title>
+    <title>Incident Management</title>
 
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 
 <body>
 
-<button id="menuButton" class="menu-button">☰</button>
+<div th:replace="fragments/layout :: menuButton"></div>
 
-<nav id="sideMenu" class="side-menu">
-    <h2>SOC Portal</h2>
+<div th:replace="fragments/layout :: sidebar"></div>
 
-    <a href="/">Dashboard</a>
-    <a href="/incidents">Incidents</a>
-</nav>
-
-<header class="topbar">
-
-    <div class="topbar-left">
-        <h1>Incident Management</h1>
-        <p>Track Security Incidents</p>
-    </div>
-
-    <div class="topbar-right">
-        👤 Joseph Jordan
-    </div>
-
-</header>
+<div th:replace="fragments/layout :: topbar(
+    'Incident Management',
+    'Track Security Incidents'
+)"></div>
 
 <main>
 

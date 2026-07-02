@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -10,130 +10,111 @@
 
 <body>
 
-    <button id="menuButton" class="menu-button">☰</button>
+<div th:replace="fragments/layout :: menuButton"></div>
 
-    <nav id="sideMenu" class="side-menu">
-        <h2>SOC Portal</h2>
-        <a href="/">Dashboard</a>
-        <a href="#">Alerts</a>
-        <a href="#">Incidents</a>
-        <a href="#">Assets</a>
-        <a href="#">Users</a>
-    </nav>
+<div th:replace="fragments/layout :: sidebar"></div>
 
-    <header class="topbar">
-        <div class="topbar-left">
-            <h1>Security Operations Center Portal</h1>
-            <p>Real-Time Security Monitoring Dashboard</p>
+<div th:replace="fragments/layout :: topbar(
+    'Security Operations Center Portal',
+    'Real-Time Security Monitoring Dashboard'
+)"></div>
+
+<main>
+
+    <section class="summary">
+        <div class="card critical"><h2 id="criticalCount">0</h2><p>Critical</p></div>
+        <div class="card high"><h2 id="highCount">0</h2><p>High</p></div>
+        <div class="card medium"><h2 id="mediumCount">0</h2><p>Medium</p></div>
+        <div class="card low"><h2 id="lowCount">0</h2><p>Low</p></div>
+
+        <div class="card total"><h2 id="totalCount">0</h2><p>Total Alerts</p></div>
+        <div class="card open"><h2 id="openCount">0</h2><p>Open</p></div>
+        <div class="card investigating"><h2 id="investigatingCount">0</h2><p>Investigating</p></div>
+        <div class="card closed"><h2 id="closedCount">0</h2><p>Closed</p></div>
+    </section>
+
+    <section class="alerts">
+
+        <div class="alerts-header">
+            <h2>Active Alerts</h2>
+
+            <button id="newAlertButton" class="new-alert-button">
+                + New Alert
+            </button>
         </div>
 
-        <div class="topbar-right">
-            <span>🔔 Notifications</span>
-            <span>👤 Joseph Jordan</span>
-        </div>
-    </header>
+        <div class="filters">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search alerts...">
 
-    <main>
-
-        <section class="summary">
-            <div class="card critical"><h2 id="criticalCount">0</h2><p>Critical</p></div>
-            <div class="card high"><h2 id="highCount">0</h2><p>High</p></div>
-            <div class="card medium"><h2 id="mediumCount">0</h2><p>Medium</p></div>
-            <div class="card low"><h2 id="lowCount">0</h2><p>Low</p></div>
-
-            <div class="card total"><h2 id="totalCount">0</h2><p>Total Alerts</p></div>
-            <div class="card open"><h2 id="openCount">0</h2><p>Open</p></div>
-            <div class="card investigating"><h2 id="investigatingCount">0</h2><p>Investigating</p></div>
-            <div class="card closed"><h2 id="closedCount">0</h2><p>Closed</p></div>
-        </section>
-
-        <section class="alerts">
-
-            <div class="alerts-header">
-                <h2>Active Alerts</h2>
-
-                <button id="newAlertButton" class="new-alert-button">
-                    + New Alert
-                </button>
-            </div>
-
-            <div class="filters">
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Search alerts...">
-
-                <select id="severityFilter">
-                    <option value="">All Severities</option>
-                    <option>Critical</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                </select>
-
-                <select id="statusFilter">
-                    <option value="">All Statuses</option>
-                    <option>Open</option>
-                    <option>Investigating</option>
-                    <option>Closed</option>
-                </select>
-            </div>
-
-            <table id="alertsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Severity</th>
-                        <th>Host</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-        </section>
-
-    </main>
-
-    <div id="alertModal" class="modal">
-        <div class="modal-content">
-
-            <h2>Create Alert</h2>
-
-            <select id="newSeverity">
+            <select id="severityFilter">
+                <option value="">All Severities</option>
                 <option>Critical</option>
                 <option>High</option>
                 <option>Medium</option>
                 <option>Low</option>
             </select>
 
-            <input
-                type="text"
-                id="newHost"
-                placeholder="Host">
-
-            <input
-                type="text"
-                id="newTitle"
-                placeholder="Alert Title">
-
-            <select id="newStatus">
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
                 <option>Open</option>
                 <option>Investigating</option>
                 <option>Closed</option>
             </select>
-
-            <div class="modal-buttons">
-                <button id="saveAlertButton">Save Alert</button>
-                <button id="cancelButton">Cancel</button>
-            </div>
-
         </div>
+
+        <table id="alertsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Severity</th>
+                    <th>Host</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+
+    </section>
+
+</main>
+
+<div id="alertModal" class="modal">
+    <div class="modal-content">
+
+        <h2>Create Alert</h2>
+
+        <select id="newSeverity">
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <input type="text" id="newHost" placeholder="Host">
+
+        <input type="text" id="newTitle" placeholder="Alert Title">
+
+        <select id="newStatus">
+            <option>Open</option>
+            <option>Investigating</option>
+            <option>Closed</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button id="saveAlertButton">Save Alert</button>
+            <button id="cancelButton">Cancel</button>
+        </div>
+
     </div>
+</div>
 
-    <script src="/js/dashboard.js"></script>
+<script src="/js/dashboard.js"></script>
+
 </body>
-
 </html>

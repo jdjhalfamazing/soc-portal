@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<button id="menuButton" class="menu-button" th:fragment="menuButton">☰</button>
+
+<nav id="sideMenu" class="side-menu" th:fragment="sidebar">
+    <h2>SOC Portal</h2>
+    <a href="/">Dashboard</a>
+    <a href="/alerts">Alerts</a>
+    <a href="/incidents">Incidents</a>
+    <a href="/assets">Assets</a>
+    <a href="#">Users</a>
+</nav>
+
+<header class="topbar" th:fragment="topbar(pageTitle, pageSubtitle)">
+    <div class="topbar-left">
+        <h1 th:text="${pageTitle}">Page Title</h1>
+        <p th:text="${pageSubtitle}">Page subtitle</p>
+    </div>
+
+    <div class="topbar-right">
+        <span>🔔 Notifications</span>
+        <span>👤 Joseph Jordan</span>
+    </div>
+</header>
+
+</body>
+</html>

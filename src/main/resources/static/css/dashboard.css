@@ -377,3 +377,27 @@ td{
 .new-alert-button:hover{
     background:#1d4ed8;
 }
+
+
+.status-select {
+    background: #2f3640;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.delete-button {
+    background: #b91c1c;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.delete-button:hover {
+    background: #dc2626;
+}

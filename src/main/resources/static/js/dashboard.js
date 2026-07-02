@@ -128,33 +128,32 @@ function displayAlerts(alerts) {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${alert.id}</td>
+    <td>${alert.id}</td>
 
-            <td>
-                <span class="badge ${alert.severity.toLowerCase()}">
-                    ${alert.severity}
-                </span>
-            </td>
+    <td>
+        <span class="badge ${alert.severity.toLowerCase()}">
+            ${alert.severity}
+        </span>
+    </td>
 
-            <td>${alert.host}</td>
+    <td>${alert.host}</td>
 
-            <td>${alert.title}</td>
+    <td>${alert.title}</td>
 
-            <td>
-                <select class="status-select" data-id="${alert.id}">
-                    <option ${alert.status === "Open" ? "selected" : ""}>Open</option>
-                    <option ${alert.status === "Investigating" ? "selected" : ""}>Investigating</option>
-                    <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
-                </select>
-            </td>
+    <td>
+        <select class="status-select" data-id="${alert.id}">
+            <option ${alert.status === "Open" ? "selected" : ""}>Open</option>
+            <option ${alert.status === "Investigating" ? "selected" : ""}>Investigating</option>
+            <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
+        </select>
+    </td>
 
-            <td>
-                <button class="delete-button" data-id="${alert.id}">
-                    Delete
-                </button>
-            </td>
-        `;
-
+    <td>
+        <button class="delete-button" data-id="${alert.id}">
+            Delete
+        </button>
+    </td>
+`;
         tableBody.appendChild(row);
     });
 
