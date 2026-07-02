@@ -11,9 +11,7 @@
 <body>
 
 <div th:replace="fragments/layout :: menuButton"></div>
-
 <div th:replace="fragments/layout :: sidebar"></div>
-
 <div th:replace="fragments/layout :: topbar(
     'Security Operations Center Portal',
     'Real-Time Security Monitoring Dashboard'
@@ -22,106 +20,95 @@
 <main>
 
     <section class="summary">
-        <div class="card critical"><h2 id="criticalCount">0</h2><p>Critical</p></div>
-        <div class="card high"><h2 id="highCount">0</h2><p>High</p></div>
-        <div class="card medium"><h2 id="mediumCount">0</h2><p>Medium</p></div>
-        <div class="card low"><h2 id="lowCount">0</h2><p>Low</p></div>
+        <div class="card critical"><h2 id="criticalCount">0</h2><p>Critical Alerts</p></div>
+        <div class="card high"><h2 id="highCount">0</h2><p>High Alerts</p></div>
+        <div class="card medium"><h2 id="mediumCount">0</h2><p>Medium Alerts</p></div>
+        <div class="card low"><h2 id="lowCount">0</h2><p>Low Alerts</p></div>
 
         <div class="card total"><h2 id="totalCount">0</h2><p>Total Alerts</p></div>
-        <div class="card open"><h2 id="openCount">0</h2><p>Open</p></div>
-        <div class="card investigating"><h2 id="investigatingCount">0</h2><p>Investigating</p></div>
-        <div class="card closed"><h2 id="closedCount">0</h2><p>Closed</p></div>
-        <div class="card total">
-    <h2 id="assetCount">0</h2>
-    <p>Total Assets</p>
-</div>
+        <div class="card open"><h2 id="openCount">0</h2><p>Open Alerts</p></div>
+        <div class="card investigating"><h2 id="investigatingCount">0</h2><p>Investigating Alerts</p></div>
+        <div class="card closed"><h2 id="closedCount">0</h2><p>Closed Alerts</p></div>
 
-<div class="card open">
-    <h2 id="activeAssetCount">0</h2>
-    <p>Active Assets</p>
-</div>
+        <div class="card total"><h2 id="assetCount">0</h2><p>Total Assets</p></div>
+        <div class="card open"><h2 id="activeAssetCount">0</h2><p>Active Assets</p></div>
+
+        <div class="card critical"><h2 id="criticalVulnerabilityCount">0</h2><p>Critical Vulnerabilities</p></div>
+        <div class="card high"><h2 id="openVulnerabilityCount">0</h2><p>Open Vulnerabilities</p></div>
     </section>
 
-<section class="alerts">
-
-    <div class="alerts-header">
-        <h2>Latest Alerts</h2>
-    </div>
-
-    <table id="alertsTable">
-
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Severity</th>
-                <th>Host</th>
-                <th>Title</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-
-    </table>
-
-</section>
-
-<section class="alerts">
-
-    <div class="alerts-header">
-        <h2>Recent Incidents</h2>
-    </div>
-
-    <table id="incidentsTable">
-
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Incident #</th>
-                <th>Title</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Assigned To</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-
-    </table>
-
-</section>
-</main>
-
-<div id="alertModal" class="modal">
-    <div class="modal-content">
-
-        <h2>Create Alert</h2>
-
-        <select id="newSeverity">
-            <option>Critical</option>
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-        </select>
-
-        <input type="text" id="newHost" placeholder="Host">
-
-        <input type="text" id="newTitle" placeholder="Alert Title">
-
-        <select id="newStatus">
-            <option>Open</option>
-            <option>Investigating</option>
-            <option>Closed</option>
-        </select>
-
-        <div class="modal-buttons">
-            <button id="saveAlertButton">Save Alert</button>
-            <button id="cancelButton">Cancel</button>
+    <section class="alerts">
+        <div class="alerts-header">
+            <h2>Latest Alerts</h2>
         </div>
 
-    </div>
-</div>
+        <table id="alertsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Severity</th>
+                    <th>Host</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
 
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section class="alerts">
+        <div class="alerts-header">
+            <h2>Recent Incidents</h2>
+        </div>
+
+        <table id="incidentsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Incident #</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section class="alerts">
+        <div class="alerts-header">
+            <h2>Security Analytics</h2>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Alert Severity</h3>
+                <canvas id="alertChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Incident Status</h3>
+                <canvas id="incidentChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Vulnerability Severity</h3>
+                <canvas id="vulnerabilityChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Asset Status</h3>
+                <canvas id="assetChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/dashboard.js"></script>
 
 </body>

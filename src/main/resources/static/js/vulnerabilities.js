@@ -124,9 +124,11 @@ function displayVulnerabilities(vulnerabilities) {
             </td>
             <td>${vuln.cvssScore}</td>
             <td>
-                <span class="status-badge">
-                    ${vuln.status}
-                </span>
+                <select class="status-select" data-id="${vuln.id}">
+                    <option ${vuln.status === "Open" ? "selected" : ""}>Open</option>
+                    <option ${vuln.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                    <option ${vuln.status === "Remediated" ? "selected" : ""}>Remediated</option>
+                </select>
             </td>
             <td>${vuln.assignedTo}</td>
             <td>
@@ -137,6 +139,24 @@ function displayVulnerabilities(vulnerabilities) {
         `;
 
         tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".status-select").forEach(select => {
+        select.addEventListener("change", async () => {
+            const vulnId = select.getAttribute("data-id");
+
+            await fetch(`/api/vulnerabilities/${vulnId}/status`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: select.value
+                })
+            });
+
+            await loadVulnerabilities();
+        });
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {

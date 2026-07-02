@@ -23,11 +23,12 @@ public class AssetService {
         return assetRepository.save(asset);
     }
 
-    public Asset getAssetById(Long id) {
-        return assetRepository.findById(id).orElseThrow();
-    }
-
     public void deleteAsset(Long id) {
         assetRepository.deleteById(id);
+    }
+
+    public Asset getAssetById(Long id) {
+        return assetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Asset not found"));
     }
 }

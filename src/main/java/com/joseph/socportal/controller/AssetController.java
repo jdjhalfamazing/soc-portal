@@ -46,4 +46,9 @@ public class AssetController {
     public void deleteAsset(@PathVariable Long id) {
         assetService.deleteAsset(id);
     }
+
+    @GetMapping("/{id}")
+    public Asset getAssetById(@PathVariable Long id) {
+        return assetService.getAssetById(id);
+    }
 }

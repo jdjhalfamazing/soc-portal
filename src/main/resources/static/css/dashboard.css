@@ -401,3 +401,20 @@ td{
 .delete-button:hover {
     background: #dc2626;
 }
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.chart-card {
+    background: #161b22;
+    padding: 25px;
+    border-radius: 14px;
+    height: 420px;
+}
+
+.chart-card canvas {
+    max-height: 300px;
+}

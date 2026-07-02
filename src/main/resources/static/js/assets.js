@@ -114,6 +114,12 @@ function displayAssets(assets) {
     assets.forEach(asset => {
         const row = document.createElement("tr");
 
+        row.style.cursor = "pointer";
+
+        row.addEventListener("click", () => {
+            window.location.href = `/assets/${asset.id}`;
+        });
+
         row.innerHTML = `
             <td>${asset.id}</td>
             <td>${asset.hostname}</td>
@@ -136,12 +142,19 @@ function displayAssets(assets) {
                 </button>
             </td>
         `;
+        row.style.cursor = "pointer";
+
+        row.addEventListener("click", () => {
+            window.location.href = `/assets/${asset.id}`;
+        });
 
         tableBody.appendChild(row);
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
             const assetId = button.getAttribute("data-id");
 
             await fetch(`/api/assets/${assetId}`, {
