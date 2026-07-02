@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html
+    lang="en"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
@@ -7,12 +10,26 @@
 
 <nav id="sideMenu" class="side-menu" th:fragment="sidebar">
     <h2>SOC Portal</h2>
+
     <a href="/">Dashboard</a>
     <a href="/alerts">Alerts</a>
     <a href="/incidents">Incidents</a>
-   <a href="/assets">Assets</a>
-   <a href="/vulnerabilities">Vulnerabilities</a>
-    <a href="#">Users</a>
+
+    <a href="/assets" sec:authorize="hasAnyRole('ISSO','ADMIN')">
+        Assets
+    </a>
+
+    <a href="/vulnerabilities" sec:authorize="hasAnyRole('ISSO','ADMIN')">
+        Vulnerabilities
+    </a>
+
+    <a href="#" sec:authorize="hasRole('ADMIN')">
+        Users
+    </a>
+
+    <a href="/logout" class="logout-link">
+    🚪 Logout
+</a>
 </nav>
 
 <header class="topbar" th:fragment="topbar(pageTitle, pageSubtitle)">
@@ -23,7 +40,7 @@
 
     <div class="topbar-right">
         <span>🔔 Notifications</span>
-        <span>👤 Joseph Jordan</span>
+        <span>👤 <span sec:authentication="name">User</span></span>
     </div>
 </header>
 
