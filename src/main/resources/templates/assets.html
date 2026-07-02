@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Inventory</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<div th:replace="fragments/layout :: menuButton"></div>
+
+<div th:replace="fragments/layout :: sidebar"></div>
+
+<div th:replace="fragments/layout :: topbar(
+    'Asset Inventory',
+    'Manage Enterprise Assets'
+)"></div>
+
+<main>
+
+<section class="alerts">
+
+    <div class="alerts-header">
+        <h2>Assets</h2>
+
+        <button id="newAssetButton" class="new-alert-button">
+            + New Asset
+        </button>
+    </div>
+
+    <div class="filters">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search assets...">
+
+        <select id="criticalityFilter">
+            <option value="">All Criticalities</option>
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option>Active</option>
+            <option>Offline</option>
+            <option>Retired</option>
+        </select>
+
+    </div>
+
+    <table id="assetTable">
+
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Hostname</th>
+            <th>IP Address</th>
+            <th>Operating System</th>
+            <th>Owner</th>
+            <th>Criticality</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody></tbody>
+
+    </table>
+
+</section>
+
+</main>
+<div id="assetModal" class="modal">
+    <div class="modal-content">
+
+        <h2>Create Asset</h2>
+
+        <input type="text" id="newHostname" placeholder="Hostname">
+
+        <input type="text" id="newIpAddress" placeholder="IP Address">
+
+        <input type="text" id="newOperatingSystem" placeholder="Operating System">
+
+        <input type="text" id="newOwner" placeholder="Owner">
+
+        <select id="newCriticality">
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <select id="newAssetStatus">
+            <option>Active</option>
+            <option>Offline</option>
+            <option>Retired</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button id="saveAssetButton">Save Asset</button>
+            <button id="cancelAssetButton">Cancel</button>
+        </div>
+
+    </div>
+</div>
+<script src="/js/assets.js"></script>
+
+</body>
+</html>
