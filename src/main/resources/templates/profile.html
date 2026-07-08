@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<div th:replace="fragments/layout :: menuButton"></div>
+<div th:replace="fragments/layout :: sidebar"></div>
+<div th:replace="fragments/layout :: topbar(
+    'User Profile',
+    'Account and role information'
+)"></div>
+
+<main>
+
+    <section class="alerts">
+
+    <div class="alerts-header">
+        <h2>Security Settings</h2>
+    </div>
+
+    <div class="details-grid">
+
+        <div class="detail-card">
+            <h3>Password</h3>
+            <p>Managed by in-memory authentication</p>
+            <button class="new-alert-button" disabled>
+                Change Password Coming Soon
+            </button>
+        </div>
+
+        <div class="detail-card">
+            <h3>Session Timeout</h3>
+            <p>15 minutes of inactivity</p>
+        </div>
+
+        <div class="detail-card">
+            <h3>Account Permissions</h3>
+            <p>Role-based access enabled</p>
+        </div>
+
+    </div>
+
+</section>
+  
+</main>
+
+<script src="/js/profile.js"></script>
+
+</body>
+</html>

@@ -16,6 +16,17 @@ const incidentDescription = document.getElementById("incidentDescription");
 const searchInput = document.getElementById("searchInput");
 const priorityFilter = document.getElementById("priorityFilter");
 const statusFilter = document.getElementById("statusFilter");
+const userMenuButton = document.getElementById("userMenuButton");
+const userDropdown = document.getElementById("userDropdown");
+
+userMenuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    userDropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", () => {
+    userDropdown.classList.remove("show");
+});
 
 let allIncidents = [];
 

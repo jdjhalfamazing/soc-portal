@@ -4,6 +4,17 @@ let vulnerabilityChart;
 let assetChart;
 const menuButton = document.getElementById("menuButton");
 const sideMenu = document.getElementById("sideMenu");
+const userMenuButton = document.getElementById("userMenuButton");
+const userDropdown = document.getElementById("userDropdown");
+
+userMenuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    userDropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", () => {
+    userDropdown.classList.remove("show");
+});
 
 let allAlerts = [];
 

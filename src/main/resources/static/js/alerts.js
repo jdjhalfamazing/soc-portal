@@ -14,6 +14,17 @@ const newStatus = document.getElementById("newStatus");
 const searchInput = document.getElementById("searchInput");
 const severityFilter = document.getElementById("severityFilter");
 const statusFilter = document.getElementById("statusFilter");
+const userMenuButton = document.getElementById("userMenuButton");
+const userDropdown = document.getElementById("userDropdown");
+
+userMenuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    userDropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", () => {
+    userDropdown.classList.remove("show");
+});
 
 let allAlerts = [];
 

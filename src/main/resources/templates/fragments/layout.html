@@ -38,10 +38,31 @@
         <p th:text="${pageSubtitle}">Page subtitle</p>
     </div>
 
-    <div class="topbar-right">
-        <span>🔔 Notifications</span>
-        <span>👤 <span sec:authentication="name">User</span></span>
+  <div class="topbar-right">
+    <span>🔔 Notifications</span>
+
+<div class="user-menu">
+
+    <button id="userMenuButton" class="user-menu-button">
+        👤 <span sec:authentication="name">User</span> ▼
+    </button>
+
+    <div id="userDropdown" class="user-dropdown">
+
+        <div class="user-dropdown-role">
+            <span sec:authorize="hasRole('ANALYST')">SOC Analyst</span>
+            <span sec:authorize="hasRole('ISSO')">ISSO</span>
+            <span sec:authorize="hasRole('ADMIN')">Administrator</span>
+        </div>
+
+        <a href="/profile">Profile</a>
+        <a href="#">Settings</a>
+        <a href="/logout" class="logout-dropdown">Logout</a>
+
     </div>
+
+</div>
+</div>
 </header>
 
 </body>
