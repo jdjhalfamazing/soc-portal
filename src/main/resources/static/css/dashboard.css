@@ -626,3 +626,32 @@ td{
 .logout-dropdown {
     color: #f87171 !important;
 }
+
+
+.light-theme {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.light-theme .topbar,
+.light-theme .alerts,
+.light-theme .card,
+.light-theme .chart-card,
+.light-theme .detail-card {
+    background: #ffffff;
+    color: #111827;
+}
+
+.light-theme th {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.light-theme td {
+    color: #111827;
+}
+
+.dark-theme {
+    background: #0f1117;
+    color: white;
+}

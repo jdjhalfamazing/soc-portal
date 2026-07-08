@@ -18,3 +18,16 @@ document.addEventListener("click", () => {
     sideMenu.classList.remove("open");
     userDropdown.classList.remove("show");
 });
+
+const themeSelect = document.getElementById("themeSelect");
+
+themeSelect.value = localStorage.getItem("theme") || "dark";
+
+themeSelect.addEventListener("change", () => {
+    const selectedTheme = themeSelect.value;
+
+    document.body.classList.remove("dark-theme", "light-theme");
+    document.body.classList.add(selectedTheme + "-theme");
+
+    localStorage.setItem("theme", selectedTheme);
+});

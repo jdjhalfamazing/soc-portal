@@ -54,6 +54,8 @@ public class SecurityConfig {
 
                                                 .requestMatchers("/").hasAnyRole("ANALYST", "ISSO", "ADMIN")
                                                 .requestMatchers("/profile/**").hasAnyRole("ANALYST", "ISSO", "ADMIN")
+                                                .requestMatchers("/settings/**")
+                                                .hasAnyRole("ANALYST", "ISSO", "ADMIN")
                                                 .requestMatchers("/access-denied")
                                                 .hasAnyRole("ANALYST", "ISSO", "ADMIN")
 
