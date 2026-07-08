@@ -2,50 +2,53 @@ let alertChart;
 let incidentChart;
 let vulnerabilityChart;
 let assetChart;
+
 const menuButton = document.getElementById("menuButton");
 const sideMenu = document.getElementById("sideMenu");
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
+
+let allAlerts = [];
+
+menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sideMenu.classList.toggle("open");
+});
 
 userMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     userDropdown.classList.toggle("show");
 });
 
-document.addEventListener("click", () => {
-    userDropdown.classList.remove("show");
-});
-
-let allAlerts = [];
-
-menuButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
 document.addEventListener("click", (event) => {
     if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
+    }
+
+    if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userDropdown.classList.remove("show");
     }
 });
 
 async function loadDashboard() {
     const response = await fetch("/api/alerts");
     allAlerts = await response.json();
+
     const incidentResponse = await fetch("/api/incidents");
     const incidents = await incidentResponse.json();
+
     const assetResponse = await fetch("/api/assets");
     const assets = await assetResponse.json();
+
     const vulnerabilityResponse = await fetch("/api/vulnerabilities");
     const vulnerabilities = await vulnerabilityResponse.json();
 
-    displayVulnerabilitySummary(vulnerabilities);
-
-    displayAssetSummary(assets);
-
-    displayLatestIncidents(incidents);
-
     displaySummary(allAlerts);
     displayLatestAlerts(allAlerts);
+    displayLatestIncidents(incidents);
+    displayAssetSummary(assets);
+    displayVulnerabilitySummary(vulnerabilities);
+
     renderAlertChart(allAlerts);
     renderIncidentChart(incidents);
     renderVulnerabilityChart(vulnerabilities);
@@ -57,8 +60,6 @@ function displaySummary(alerts) {
     let high = 0;
     let medium = 0;
     let low = 0;
-
-    let total = alerts.length;
     let open = 0;
     let investigating = 0;
     let closed = 0;
@@ -79,7 +80,7 @@ function displaySummary(alerts) {
     document.getElementById("mediumCount").textContent = medium;
     document.getElementById("lowCount").textContent = low;
 
-    document.getElementById("totalCount").textContent = total;
+    document.getElementById("totalCount").textContent = alerts.length;
     document.getElementById("openCount").textContent = open;
     document.getElementById("investigatingCount").textContent = investigating;
     document.getElementById("closedCount").textContent = closed;
@@ -87,28 +88,17 @@ function displaySummary(alerts) {
 
 function displayLatestAlerts(alerts) {
     const tableBody = document.querySelector("#alertsTable tbody");
-
     tableBody.innerHTML = "";
 
-    const latestAlerts = alerts.slice(-5).reverse();
-
-    latestAlerts.forEach(alert => {
+    alerts.slice(-5).reverse().forEach(alert => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
             <td>${alert.id}</td>
-            <td>
-                <span class="badge ${alert.severity.toLowerCase()}">
-                    ${alert.severity}
-                </span>
-            </td>
+            <td><span class="badge ${alert.severity.toLowerCase()}">${alert.severity}</span></td>
             <td>${alert.host}</td>
             <td>${alert.title}</td>
-            <td>
-                <span class="status-badge">
-                    ${alert.status}
-                </span>
-            </td>
+            <td><span class="status-badge">${alert.status}</span></td>
         `;
 
         tableBody.appendChild(row);
@@ -117,41 +107,29 @@ function displayLatestAlerts(alerts) {
 
 function displayLatestIncidents(incidents) {
     const tableBody = document.querySelector("#incidentsTable tbody");
-
     tableBody.innerHTML = "";
 
-    const latestIncidents = incidents.slice(-5).reverse();
-
-    latestIncidents.forEach(incident => {
+    incidents.slice(-5).reverse().forEach(incident => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
             <td>${incident.id}</td>
             <td>${incident.incidentNumber}</td>
             <td>${incident.title}</td>
-            <td>
-                <span class="badge ${incident.priority.toLowerCase()}">
-                    ${incident.priority}
-                </span>
-            </td>
-            <td>
-                <span class="status-badge">
-                    ${incident.status}
-                </span>
-            </td>
+            <td><span class="badge ${incident.priority.toLowerCase()}">${incident.priority}</span></td>
+            <td><span class="status-badge">${incident.status}</span></td>
             <td>${incident.assignedTo}</td>
         `;
 
         tableBody.appendChild(row);
     });
 }
+
 function displayAssetSummary(assets) {
     let active = 0;
 
     assets.forEach(asset => {
-        if (asset.status === "Active") {
-            active++;
-        }
+        if (asset.status === "Active") active++;
     });
 
     document.getElementById("assetCount").textContent = assets.length;
@@ -163,13 +141,8 @@ function displayVulnerabilitySummary(vulnerabilities) {
     let open = 0;
 
     vulnerabilities.forEach(vuln => {
-        if (vuln.severity === "Critical") {
-            critical++;
-        }
-
-        if (vuln.status === "Open") {
-            open++;
-        }
+        if (vuln.severity === "Critical") critical++;
+        if (vuln.status === "Open") open++;
     });
 
     document.getElementById("criticalVulnerabilityCount").textContent = critical;
@@ -179,7 +152,10 @@ function displayVulnerabilitySummary(vulnerabilities) {
 function renderAlertChart(alerts) {
     if (alertChart) alertChart.destroy();
 
-    let critical = 0, high = 0, medium = 0, low = 0;
+    let critical = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
 
     alerts.forEach(alert => {
         if (alert.severity === "Critical") critical++;
@@ -195,14 +171,18 @@ function renderAlertChart(alerts) {
             datasets: [{
                 data: [critical, high, medium, low]
             }]
-        }
+        },
+        options: getChartOptions(),
+        plugins: [ChartDataLabels]
     });
 }
 
 function renderIncidentChart(incidents) {
     if (incidentChart) incidentChart.destroy();
 
-    let open = 0, investigating = 0, closed = 0;
+    let open = 0;
+    let investigating = 0;
+    let closed = 0;
 
     incidents.forEach(incident => {
         if (incident.status === "Open") open++;
@@ -217,14 +197,19 @@ function renderIncidentChart(incidents) {
             datasets: [{
                 data: [open, investigating, closed]
             }]
-        }
+        },
+        options: getChartOptions(),
+        plugins: [ChartDataLabels]
     });
 }
 
 function renderVulnerabilityChart(vulnerabilities) {
     if (vulnerabilityChart) vulnerabilityChart.destroy();
 
-    let critical = 0, high = 0, medium = 0, low = 0;
+    let critical = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
 
     vulnerabilities.forEach(vuln => {
         if (vuln.severity === "Critical") critical++;
@@ -240,14 +225,18 @@ function renderVulnerabilityChart(vulnerabilities) {
             datasets: [{
                 data: [critical, high, medium, low]
             }]
-        }
+        },
+        options: getChartOptions(),
+        plugins: [ChartDataLabels]
     });
 }
 
 function renderAssetChart(assets) {
     if (assetChart) assetChart.destroy();
 
-    let active = 0, offline = 0, retired = 0;
+    let active = 0;
+    let offline = 0;
+    let retired = 0;
 
     assets.forEach(asset => {
         if (asset.status === "Active") active++;
@@ -262,9 +251,39 @@ function renderAssetChart(assets) {
             datasets: [{
                 data: [active, offline, retired]
             }]
-        }
+        },
+        options: getChartOptions(),
+        plugins: [ChartDataLabels]
     });
 }
 
-loadDashboard();
+function getChartOptions() {
+    return {
+        plugins: {
+            datalabels: {
+                color: "white",
+                font: {
+                    weight: "bold",
+                    size: 14
+                },
+                formatter: (value, context) => {
+                    const data = context.chart.data.datasets[0].data;
+                    const total = data.reduce((sum, item) => sum + item, 0);
 
+                    if (total === 0 || value === 0) {
+                        return "";
+                    }
+
+                    return ((value / total) * 100).toFixed(0) + "%";
+                }
+            },
+            legend: {
+                labels: {
+                    color: "#6b7280"
+                }
+            }
+        }
+    };
+}
+
+loadDashboard();

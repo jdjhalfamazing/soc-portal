@@ -14,27 +14,29 @@ const newStatus = document.getElementById("newStatus");
 const searchInput = document.getElementById("searchInput");
 const severityFilter = document.getElementById("severityFilter");
 const statusFilter = document.getElementById("statusFilter");
+
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
+
+let allAlerts = [];
+
+menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sideMenu.classList.toggle("open");
+});
 
 userMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     userDropdown.classList.toggle("show");
 });
 
-document.addEventListener("click", () => {
-    userDropdown.classList.remove("show");
-});
-
-let allAlerts = [];
-
-menuButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
 document.addEventListener("click", (event) => {
     if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
+    }
+
+    if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userDropdown.classList.remove("show");
     }
 });
 
@@ -74,6 +76,10 @@ saveAlertButton.addEventListener("click", async () => {
     newTitle.value = "";
 
     await loadAlerts();
+
+    if (typeof loadNotifications === "function") {
+        await loadNotifications();
+    }
 });
 
 searchInput.addEventListener("input", filterAlerts);
@@ -99,11 +105,8 @@ function filterAlerts() {
             alert.severity.toLowerCase().includes(search) ||
             alert.status.toLowerCase().includes(search);
 
-        const matchesSeverity =
-            severity === "" || alert.severity === severity;
-
-        const matchesStatus =
-            status === "" || alert.status === status;
+        const matchesSeverity = severity === "" || alert.severity === severity;
+        const matchesStatus = status === "" || alert.status === status;
 
         return matchesSearch && matchesSeverity && matchesStatus;
     });
@@ -113,15 +116,12 @@ function filterAlerts() {
 
 function displayAlerts(alerts) {
     const tableBody = document.querySelector("#alertsTable tbody");
-
     tableBody.innerHTML = "";
 
     let critical = 0;
     let high = 0;
     let medium = 0;
     let low = 0;
-
-    let total = alerts.length;
     let open = 0;
     let investigating = 0;
     let closed = 0;
@@ -139,32 +139,24 @@ function displayAlerts(alerts) {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-    <td>${alert.id}</td>
+            <td>${alert.id}</td>
+            <td><span class="badge ${alert.severity.toLowerCase()}">${alert.severity}</span></td>
+            <td>${alert.host}</td>
+            <td>${alert.title}</td>
+            <td>
+                <select class="status-select" data-id="${alert.id}">
+                    <option ${alert.status === "Open" ? "selected" : ""}>Open</option>
+                    <option ${alert.status === "Investigating" ? "selected" : ""}>Investigating</option>
+                    <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
+                </select>
+            </td>
+            <td>
+                <button class="delete-button" data-id="${alert.id}">
+                    Delete
+                </button>
+            </td>
+        `;
 
-    <td>
-        <span class="badge ${alert.severity.toLowerCase()}">
-            ${alert.severity}
-        </span>
-    </td>
-
-    <td>${alert.host}</td>
-
-    <td>${alert.title}</td>
-
-    <td>
-        <select class="status-select" data-id="${alert.id}">
-            <option ${alert.status === "Open" ? "selected" : ""}>Open</option>
-            <option ${alert.status === "Investigating" ? "selected" : ""}>Investigating</option>
-            <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
-        </select>
-    </td>
-
-    <td>
-        <button class="delete-button" data-id="${alert.id}">
-            Delete
-        </button>
-    </td>
-`;
         tableBody.appendChild(row);
     });
 
@@ -183,6 +175,10 @@ function displayAlerts(alerts) {
             });
 
             await loadAlerts();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 
@@ -195,6 +191,10 @@ function displayAlerts(alerts) {
             });
 
             await loadAlerts();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 
@@ -203,7 +203,7 @@ function displayAlerts(alerts) {
     document.getElementById("mediumCount").textContent = medium;
     document.getElementById("lowCount").textContent = low;
 
-    document.getElementById("totalCount").textContent = total;
+    document.getElementById("totalCount").textContent = alerts.length;
     document.getElementById("openCount").textContent = open;
     document.getElementById("investigatingCount").textContent = investigating;
     document.getElementById("closedCount").textContent = closed;

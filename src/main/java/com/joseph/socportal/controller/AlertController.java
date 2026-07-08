@@ -31,7 +31,6 @@ public class AlertController {
             @RequestBody Alert updatedAlert) {
 
         Alert alert = alertService.getAlertById(id);
-
         alert.setStatus(updatedAlert.getStatus());
 
         return alertService.saveAlert(alert);

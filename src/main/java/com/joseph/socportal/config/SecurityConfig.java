@@ -71,6 +71,8 @@ public class SecurityConfig {
                                                 .hasAnyRole("ANALYST", "ISSO", "ADMIN")
                                                 .requestMatchers("/api/assets/**").hasAnyRole("ISSO", "ADMIN")
                                                 .requestMatchers("/api/vulnerabilities/**").hasAnyRole("ISSO", "ADMIN")
+                                                .requestMatchers("/api/notifications/**")
+                                                .hasAnyRole("ANALYST", "ISSO", "ADMIN")
 
                                                 .anyRequest().authenticated())
 

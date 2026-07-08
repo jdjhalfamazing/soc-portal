@@ -16,27 +16,29 @@ const newAssetStatus = document.getElementById("newAssetStatus");
 const searchInput = document.getElementById("searchInput");
 const criticalityFilter = document.getElementById("criticalityFilter");
 const statusFilter = document.getElementById("statusFilter");
+
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
+
+let allAssets = [];
+
+menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sideMenu.classList.toggle("open");
+});
 
 userMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     userDropdown.classList.toggle("show");
 });
 
-document.addEventListener("click", () => {
-    userDropdown.classList.remove("show");
-});
-
-let allAssets = [];
-
-menuButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
 document.addEventListener("click", (event) => {
     if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
+    }
+
+    if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userDropdown.classList.remove("show");
     }
 });
 
@@ -80,6 +82,10 @@ saveAssetButton.addEventListener("click", async () => {
     newOwner.value = "";
 
     await loadAssets();
+
+    if (typeof loadNotifications === "function") {
+        await loadNotifications();
+    }
 });
 
 searchInput.addEventListener("input", filterAssets);
@@ -105,11 +111,8 @@ function filterAssets() {
             asset.operatingSystem.toLowerCase().includes(search) ||
             asset.owner.toLowerCase().includes(search);
 
-        const matchesCriticality =
-            criticality === "" || asset.criticality === criticality;
-
-        const matchesStatus =
-            status === "" || asset.status === status;
+        const matchesCriticality = criticality === "" || asset.criticality === criticality;
+        const matchesStatus = status === "" || asset.status === status;
 
         return matchesSearch && matchesCriticality && matchesStatus;
     });
@@ -119,17 +122,11 @@ function filterAssets() {
 
 function displayAssets(assets) {
     const tableBody = document.querySelector("#assetTable tbody");
-
     tableBody.innerHTML = "";
 
     assets.forEach(asset => {
         const row = document.createElement("tr");
-
         row.style.cursor = "pointer";
-
-        row.addEventListener("click", () => {
-            window.location.href = `/assets/${asset.id}`;
-        });
 
         row.innerHTML = `
             <td>${asset.id}</td>
@@ -137,23 +134,14 @@ function displayAssets(assets) {
             <td>${asset.ipAddress}</td>
             <td>${asset.operatingSystem}</td>
             <td>${asset.owner}</td>
-            <td>
-                <span class="badge ${asset.criticality.toLowerCase()}">
-                    ${asset.criticality}
-                </span>
-            </td>
-            <td>
-                <span class="status-badge">
-                    ${asset.status}
-                </span>
-            </td>
+            <td><span class="badge ${asset.criticality.toLowerCase()}">${asset.criticality}</span></td>
+            <td><span class="status-badge">${asset.status}</span></td>
             <td>
                 <button class="delete-button" data-id="${asset.id}">
                     Delete
                 </button>
             </td>
         `;
-        row.style.cursor = "pointer";
 
         row.addEventListener("click", () => {
             window.location.href = `/assets/${asset.id}`;
@@ -173,6 +161,10 @@ function displayAssets(assets) {
             });
 
             await loadAssets();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 }

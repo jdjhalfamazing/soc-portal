@@ -10,9 +10,12 @@ import java.util.List;
 public class AlertService {
 
     private final AlertRepository alertRepository;
+    private final NotificationService notificationService;
 
-    public AlertService(AlertRepository alertRepository) {
+    public AlertService(AlertRepository alertRepository,
+            NotificationService notificationService) {
         this.alertRepository = alertRepository;
+        this.notificationService = notificationService;
     }
 
     public List<Alert> getAllAlerts() {
@@ -20,7 +23,18 @@ public class AlertService {
     }
 
     public Alert saveAlert(Alert alert) {
-        return alertRepository.save(alert);
+        Alert savedAlert = alertRepository.save(alert);
+
+        System.out.println("ALERT SAVED: " + savedAlert.getTitle());
+
+        notificationService.addNotification(
+                savedAlert.getSeverity() + " Alert",
+                savedAlert.getTitle(),
+                savedAlert.getSeverity().toLowerCase());
+
+        System.out.println("NOTIFICATION COUNT: " + notificationService.getNotifications().size());
+
+        return savedAlert;
     }
 
     public Alert getAlertById(Long id) {
@@ -30,5 +44,4 @@ public class AlertService {
     public void deleteAlert(Long id) {
         alertRepository.deleteById(id);
     }
-
 }

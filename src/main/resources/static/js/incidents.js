@@ -16,27 +16,29 @@ const incidentDescription = document.getElementById("incidentDescription");
 const searchInput = document.getElementById("searchInput");
 const priorityFilter = document.getElementById("priorityFilter");
 const statusFilter = document.getElementById("statusFilter");
+
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
+
+let allIncidents = [];
+
+menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sideMenu.classList.toggle("open");
+});
 
 userMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     userDropdown.classList.toggle("show");
 });
 
-document.addEventListener("click", () => {
-    userDropdown.classList.remove("show");
-});
-
-let allIncidents = [];
-
-menuButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
 document.addEventListener("click", (event) => {
     if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
+    }
+
+    if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userDropdown.classList.remove("show");
     }
 });
 
@@ -80,6 +82,10 @@ saveIncidentButton.addEventListener("click", async () => {
     incidentDescription.value = "";
 
     await loadIncidents();
+
+    if (typeof loadNotifications === "function") {
+        await loadNotifications();
+    }
 });
 
 searchInput.addEventListener("input", filterIncidents);
@@ -106,11 +112,8 @@ function filterIncidents() {
             incident.status.toLowerCase().includes(search) ||
             incident.assignedTo.toLowerCase().includes(search);
 
-        const matchesPriority =
-            priority === "" || incident.priority === priority;
-
-        const matchesStatus =
-            status === "" || incident.status === status;
+        const matchesPriority = priority === "" || incident.priority === priority;
+        const matchesStatus = status === "" || incident.status === status;
 
         return matchesSearch && matchesPriority && matchesStatus;
     });
@@ -120,7 +123,6 @@ function filterIncidents() {
 
 function displayIncidents(incidents) {
     const tableBody = document.querySelector("#incidentTable tbody");
-
     tableBody.innerHTML = "";
 
     incidents.forEach(incident => {
@@ -130,11 +132,7 @@ function displayIncidents(incidents) {
             <td>${incident.id}</td>
             <td>${incident.incidentNumber}</td>
             <td>${incident.title}</td>
-            <td>
-                <span class="badge ${incident.priority.toLowerCase()}">
-                    ${incident.priority}
-                </span>
-            </td>
+            <td><span class="badge ${incident.priority.toLowerCase()}">${incident.priority}</span></td>
             <td>
                 <select class="status-select" data-id="${incident.id}">
                     <option ${incident.status === "Open" ? "selected" : ""}>Open</option>
@@ -168,6 +166,10 @@ function displayIncidents(incidents) {
             });
 
             await loadIncidents();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 
@@ -180,6 +182,10 @@ function displayIncidents(incidents) {
             });
 
             await loadIncidents();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 }

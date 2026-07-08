@@ -16,27 +16,29 @@ const newAssignedTo = document.getElementById("newAssignedTo");
 const searchInput = document.getElementById("searchInput");
 const severityFilter = document.getElementById("severityFilter");
 const statusFilter = document.getElementById("statusFilter");
+
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
+
+let allVulnerabilities = [];
+
+menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sideMenu.classList.toggle("open");
+});
 
 userMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     userDropdown.classList.toggle("show");
 });
 
-document.addEventListener("click", () => {
-    userDropdown.classList.remove("show");
-});
-
-let allVulnerabilities = [];
-
-menuButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
 document.addEventListener("click", (event) => {
     if (!sideMenu.contains(event.target) && !menuButton.contains(event.target)) {
         sideMenu.classList.remove("open");
+    }
+
+    if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+        userDropdown.classList.remove("show");
     }
 });
 
@@ -80,6 +82,10 @@ saveVulnerabilityButton.addEventListener("click", async () => {
     newAssignedTo.value = "";
 
     await loadVulnerabilities();
+
+    if (typeof loadNotifications === "function") {
+        await loadNotifications();
+    }
 });
 
 searchInput.addEventListener("input", filterVulnerabilities);
@@ -104,11 +110,8 @@ function filterVulnerabilities() {
             vuln.hostname.toLowerCase().includes(search) ||
             vuln.assignedTo.toLowerCase().includes(search);
 
-        const matchesSeverity =
-            severity === "" || vuln.severity === severity;
-
-        const matchesStatus =
-            status === "" || vuln.status === status;
+        const matchesSeverity = severity === "" || vuln.severity === severity;
+        const matchesStatus = status === "" || vuln.status === status;
 
         return matchesSearch && matchesSeverity && matchesStatus;
     });
@@ -118,7 +121,6 @@ function filterVulnerabilities() {
 
 function displayVulnerabilities(vulnerabilities) {
     const tableBody = document.querySelector("#vulnerabilityTable tbody");
-
     tableBody.innerHTML = "";
 
     vulnerabilities.forEach(vuln => {
@@ -128,11 +130,7 @@ function displayVulnerabilities(vulnerabilities) {
             <td>${vuln.id}</td>
             <td>${vuln.cve}</td>
             <td>${vuln.hostname}</td>
-            <td>
-                <span class="badge ${vuln.severity.toLowerCase()}">
-                    ${vuln.severity}
-                </span>
-            </td>
+            <td><span class="badge ${vuln.severity.toLowerCase()}">${vuln.severity}</span></td>
             <td>${vuln.cvssScore}</td>
             <td>
                 <select class="status-select" data-id="${vuln.id}">
@@ -167,6 +165,10 @@ function displayVulnerabilities(vulnerabilities) {
             });
 
             await loadVulnerabilities();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 
@@ -179,6 +181,10 @@ function displayVulnerabilities(vulnerabilities) {
             });
 
             await loadVulnerabilities();
+
+            if (typeof loadNotifications === "function") {
+                await loadNotifications();
+            }
         });
     });
 }

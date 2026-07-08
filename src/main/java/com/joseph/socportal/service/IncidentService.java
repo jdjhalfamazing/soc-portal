@@ -10,9 +10,12 @@ import java.util.List;
 public class IncidentService {
 
     private final IncidentRepository incidentRepository;
+    private final NotificationService notificationService;
 
-    public IncidentService(IncidentRepository incidentRepository) {
+    public IncidentService(IncidentRepository incidentRepository,
+            NotificationService notificationService) {
         this.incidentRepository = incidentRepository;
+        this.notificationService = notificationService;
     }
 
     public List<Incident> getAllIncidents() {
@@ -20,7 +23,15 @@ public class IncidentService {
     }
 
     public Incident saveIncident(Incident incident) {
-        return incidentRepository.save(incident);
+
+        Incident savedIncident = incidentRepository.save(incident);
+
+        notificationService.addNotification(
+                "New Incident",
+                savedIncident.getIncidentNumber() + " - " + savedIncident.getTitle(),
+                savedIncident.getPriority().toLowerCase());
+
+        return savedIncident;
     }
 
     public Incident getIncidentById(Long id) {

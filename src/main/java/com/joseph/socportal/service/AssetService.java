@@ -10,9 +10,12 @@ import java.util.List;
 public class AssetService {
 
     private final AssetRepository assetRepository;
+    private final NotificationService notificationService;
 
-    public AssetService(AssetRepository assetRepository) {
+    public AssetService(AssetRepository assetRepository,
+            NotificationService notificationService) {
         this.assetRepository = assetRepository;
+        this.notificationService = notificationService;
     }
 
     public List<Asset> getAllAssets() {
@@ -20,7 +23,15 @@ public class AssetService {
     }
 
     public Asset saveAsset(Asset asset) {
-        return assetRepository.save(asset);
+
+        Asset savedAsset = assetRepository.save(asset);
+
+        notificationService.addNotification(
+                "New Asset Added",
+                savedAsset.getHostname() + " has been added.",
+                "info");
+
+        return savedAsset;
     }
 
     public void deleteAsset(Long id) {

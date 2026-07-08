@@ -655,3 +655,122 @@ td{
     background: #0f1117;
     color: white;
 }
+
+.notification-menu {
+    position: relative;
+}
+
+.notification-button {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+}
+
+.light-theme .notification-button {
+    color: #111827;
+}
+
+.notification-count {
+    background: #dc2626;
+    color: white;
+    border-radius: 999px;
+    font-size: 11px;
+    padding: 2px 6px;
+    margin-left: 4px;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 38px;
+    width: 340px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 15px;
+    z-index: 10000;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-dropdown h3 {
+    margin: 0 0 12px 0;
+    color: white;
+}
+
+.notification-item {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #1f2937;
+    border-left: 4px solid #3b82f6;
+}
+
+.notification-item strong {
+    color: white;
+}
+
+.notification-item p {
+    margin: 6px 0 0 0;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.notification-item.critical {
+    border-left-color: #ef4444;
+}
+
+.notification-item.warning {
+    border-left-color: #f59e0b;
+}
+
+.notification-item.info {
+    border-left-color: #3b82f6;
+}
+
+.clear-notifications-button {
+    width: 100%;
+    padding: 10px;
+    background: #374151;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clear-notifications-button:hover {
+    background: #4b5563;
+}
+
+.light-theme .notification-dropdown {
+    background: white;
+    border-color: #d1d5db;
+}
+
+.light-theme .notification-dropdown h3,
+.light-theme .notification-item strong {
+    color: #111827;
+}
+
+.light-theme .notification-item {
+    background: #f3f4f6;
+}
+
+.light-theme .notification-item p {
+    color: #4b5563;
+}
+
+.notification-list {
+    margin-bottom: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+}
