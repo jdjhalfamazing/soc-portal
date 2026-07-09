@@ -17,6 +17,24 @@
 )}"></div>
 
 <main>
+    <section class="filters">
+        <input type="text" id="searchInput" placeholder="Search audit logs...">
+
+        <select id="actionFilter">
+            <option value="">All Actions</option>
+            <option value="Created/Updated">Created/Updated</option>
+            <option value="Deleted">Deleted</option>
+        </select>
+
+        <select id="moduleFilter">
+            <option value="">All Modules</option>
+            <option value="Alert">Alert</option>
+            <option value="Asset">Asset</option>
+            <option value="Incident">Incident</option>
+            <option value="Vulnerability">Vulnerability</option>
+        </select>
+    </section>
+
     <section class="alerts">
         <div class="alerts-header">
             <h2>System Activity</h2>

@@ -3,6 +3,12 @@ const sideMenu = document.getElementById("sideMenu");
 const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
 
+const searchInput = document.getElementById("searchInput");
+const actionFilter = document.getElementById("actionFilter");
+const moduleFilter = document.getElementById("moduleFilter");
+
+let allLogs = [];
+
 menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     sideMenu.classList.toggle("open");
@@ -23,21 +29,50 @@ document.addEventListener("click", (event) => {
     }
 });
 
+searchInput.addEventListener("input", filterLogs);
+actionFilter.addEventListener("change", filterLogs);
+moduleFilter.addEventListener("change", filterLogs);
+
 async function loadAuditLogs() {
     const response = await fetch("/api/audit-logs");
-    const logs = await response.json();
+    allLogs = await response.json();
 
+    displayLogs(allLogs.reverse());
+}
+
+function filterLogs() {
+    const search = searchInput.value.toLowerCase();
+    const action = actionFilter.value;
+    const module = moduleFilter.value;
+
+    const filtered = allLogs.filter(log => {
+        const matchesSearch =
+            log.username.toLowerCase().includes(search) ||
+            log.action.toLowerCase().includes(search) ||
+            log.module.toLowerCase().includes(search) ||
+            log.details.toLowerCase().includes(search);
+
+        const matchesAction = action === "" || log.action === action;
+        const matchesModule = module === "" || log.module === module;
+
+        return matchesSearch && matchesAction && matchesModule;
+    });
+
+    displayLogs(filtered);
+}
+
+function displayLogs(logs) {
     const tableBody = document.querySelector("#auditLogTable tbody");
     tableBody.innerHTML = "";
 
-    logs.reverse().forEach(log => {
+    logs.forEach(log => {
         const row = document.createElement("tr");
         const date = new Date(log.timestamp).toLocaleString();
 
         row.innerHTML = `
             <td>${date}</td>
             <td>${log.username}</td>
-            <td>${log.action}</td>
+            <td><span class="status-badge">${log.action}</span></td>
             <td>${log.module}</td>
             <td>${log.details}</td>
         `;
