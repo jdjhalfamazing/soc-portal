@@ -21,6 +21,7 @@ const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
 
 let allVulnerabilities = [];
+let editingVulnerabilityId = null;
 
 menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -43,6 +44,18 @@ document.addEventListener("click", (event) => {
 });
 
 newVulnerabilityButton.addEventListener("click", () => {
+
+    editingVulnerabilityId = null;
+
+    saveVulnerabilityButton.textContent = "Save Vulnerability";
+
+    newCve.value = "";
+    newHostname.value = "";
+    newSeverity.value = "Critical";
+    newCvssScore.value = "";
+    newStatus.value = "Open";
+    newAssignedTo.value = "";
+
     vulnerabilityModal.classList.add("show");
 });
 
@@ -57,6 +70,7 @@ window.addEventListener("click", (event) => {
 });
 
 saveVulnerabilityButton.addEventListener("click", async () => {
+
     const vulnerability = {
         cve: newCve.value,
         hostname: newHostname.value,
@@ -66,15 +80,32 @@ saveVulnerabilityButton.addEventListener("click", async () => {
         assignedTo: newAssignedTo.value
     };
 
-    await fetch("/api/vulnerabilities", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(vulnerability)
-    });
+    if (editingVulnerabilityId === null) {
+
+        await fetch("/api/vulnerabilities", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(vulnerability)
+        });
+
+    } else {
+
+        await fetch(`/api/vulnerabilities/${editingVulnerabilityId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(vulnerability)
+        });
+
+    }
 
     vulnerabilityModal.classList.remove("show");
+
+    editingVulnerabilityId = null;
+    saveVulnerabilityButton.textContent = "Save Vulnerability";
 
     newCve.value = "";
     newHostname.value = "";
@@ -140,11 +171,15 @@ function displayVulnerabilities(vulnerabilities) {
                 </select>
             </td>
             <td>${vuln.assignedTo}</td>
-            <td>
-                <button class="delete-button" data-id="${vuln.id}">
-                    Delete
-                </button>
-            </td>
+          <td>
+    <button class="edit-button" data-id="${vuln.id}">
+        Edit
+    </button>
+
+    <button class="delete-button" data-id="${vuln.id}">
+        Delete
+    </button>
+</td>
         `;
 
         tableBody.appendChild(row);
@@ -170,6 +205,30 @@ function displayVulnerabilities(vulnerabilities) {
                 await loadNotifications();
             }
         });
+    });
+
+    document.querySelectorAll(".edit-button").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const vulnerabilityId = Number(button.getAttribute("data-id"));
+
+            const vulnerability = allVulnerabilities.find(v => v.id === vulnerabilityId);
+
+            editingVulnerabilityId = vulnerability.id;
+
+            newCve.value = vulnerability.cve;
+            newHostname.value = vulnerability.hostname;
+            newSeverity.value = vulnerability.severity;
+            newCvssScore.value = vulnerability.cvssScore;
+            newStatus.value = vulnerability.status;
+            newAssignedTo.value = vulnerability.assignedTo;
+
+            saveVulnerabilityButton.textContent = "Update Vulnerability";
+
+            vulnerabilityModal.classList.add("show");
+        });
+
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {

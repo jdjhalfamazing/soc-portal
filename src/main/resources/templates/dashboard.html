@@ -78,31 +78,54 @@
         </table>
     </section>
 
-    <section class="alerts">
-        <div class="alerts-header">
-            <h2>Security Analytics</h2>
+    
+   <section class="alerts">
+    <div class="alerts-header">
+        <h2>Security Analytics</h2>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h3>Alert Severity</h3>
+            <canvas id="alertChart"></canvas>
         </div>
 
-        <div class="chart-grid">
-            <div class="chart-card">
-                <h3>Alert Severity</h3>
-                <canvas id="alertChart"></canvas>
-            </div>
+        <div class="chart-card">
+            <h3>Incident Status</h3>
+            <canvas id="incidentChart"></canvas>
+        </div>
 
-            <div class="chart-card">
-                <h3>Incident Status</h3>
-                <canvas id="incidentChart"></canvas>
-            </div>
+        <div class="chart-card">
+            <h3>Vulnerability Severity</h3>
+            <canvas id="vulnerabilityChart"></canvas>
+        </div>
 
-            <div class="chart-card">
-                <h3>Vulnerability Severity</h3>
-                <canvas id="vulnerabilityChart"></canvas>
-            </div>
+        <div class="chart-card">
+            <h3>Asset Status</h3>
+            <canvas id="assetChart"></canvas>
+        </div>
+    </div>
+</section>
 
-            <div class="chart-card">
-                <h3>Asset Status</h3>
-                <canvas id="assetChart"></canvas>
-            </div>
+<section class="alerts">
+    <div class="alerts-header">
+        <h2>Analyst Workload</h2>
+    </div>
+
+    <table id="analystWorkloadTable">
+        <thead>
+            <tr>
+                <th>Analyst</th>
+                <th>Incidents</th>
+                <th>Vulnerabilities</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</section>
+
+     
         </div>
     </section>
 

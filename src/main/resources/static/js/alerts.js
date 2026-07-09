@@ -19,6 +19,7 @@ const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
 
 let allAlerts = [];
+let editingAlertId = null;
 
 menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -41,16 +42,29 @@ document.addEventListener("click", (event) => {
 });
 
 newAlertButton.addEventListener("click", () => {
+    editingAlertId = null;
+
+    saveAlertButton.textContent = "Save Alert";
+
+    newSeverity.value = "Critical";
+    newHost.value = "";
+    newTitle.value = "";
+    newStatus.value = "Open";
+
     modal.classList.add("show");
 });
 
 cancelButton.addEventListener("click", () => {
     modal.classList.remove("show");
+    editingAlertId = null;
+    saveAlertButton.textContent = "Save Alert";
 });
 
 window.addEventListener("click", (event) => {
     if (event.target === modal) {
         modal.classList.remove("show");
+        editingAlertId = null;
+        saveAlertButton.textContent = "Save Alert";
     }
 });
 
@@ -62,15 +76,28 @@ saveAlertButton.addEventListener("click", async () => {
         status: newStatus.value
     };
 
-    await fetch("/api/alerts", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(alert)
-    });
+    if (editingAlertId === null) {
+        await fetch("/api/alerts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(alert)
+        });
+    } else {
+        await fetch(`/api/alerts/${editingAlertId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(alert)
+        });
+    }
 
     modal.classList.remove("show");
+
+    editingAlertId = null;
+    saveAlertButton.textContent = "Save Alert";
 
     newHost.value = "";
     newTitle.value = "";
@@ -150,14 +177,38 @@ function displayAlerts(alerts) {
                     <option ${alert.status === "Closed" ? "selected" : ""}>Closed</option>
                 </select>
             </td>
-            <td>
-                <button class="delete-button" data-id="${alert.id}">
-                    Delete
-                </button>
-            </td>
+          <td>
+    <div class="action-buttons">
+        <button class="edit-button" data-id="${alert.id}">
+            Edit
+        </button>
+
+        <button class="delete-button" data-id="${alert.id}">
+            Delete
+        </button>
+    </div>
+</td>
         `;
 
         tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".edit-button").forEach(button => {
+        button.addEventListener("click", () => {
+            const alertId = Number(button.getAttribute("data-id"));
+            const alert = allAlerts.find(item => item.id === alertId);
+
+            editingAlertId = alert.id;
+
+            newSeverity.value = alert.severity;
+            newHost.value = alert.host;
+            newTitle.value = alert.title;
+            newStatus.value = alert.status;
+
+            saveAlertButton.textContent = "Update Alert";
+
+            modal.classList.add("show");
+        });
     });
 
     document.querySelectorAll(".status-select").forEach(select => {

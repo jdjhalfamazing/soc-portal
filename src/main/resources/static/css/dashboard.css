@@ -774,3 +774,36 @@ td{
     max-height: 240px;
     overflow-y: auto;
 }
+
+.edit-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-right: 8px;
+}
+
+.edit-button:hover {
+    background-color: #1d4ed8;
+}
+
+.delete-button {
+    margin-left: 4px;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.edit-button,
+.delete-button {
+    min-width: 80px;
+}

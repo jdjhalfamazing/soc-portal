@@ -42,6 +42,11 @@ async function loadDashboard() {
 
     const vulnerabilityResponse = await fetch("/api/vulnerabilities");
     const vulnerabilities = await vulnerabilityResponse.json();
+    const workloadResponse = await fetch("/api/analyst-workload");
+    const workload = await workloadResponse.json();
+
+    // renderAnalystWorkloadChart(workload);
+    displayAnalystWorkloadTable(workload);
 
     displaySummary(allAlerts);
     displayLatestAlerts(allAlerts);
@@ -284,6 +289,41 @@ function getChartOptions() {
             }
         }
     };
+}
+
+function renderAnalystWorkloadChart(workload) {
+    if (analystWorkloadChart) analystWorkloadChart.destroy();
+
+    analystWorkloadChart = new Chart(document.getElementById("analystWorkloadChart"), {
+        type: "bar",
+        data: {
+            labels: workload.map(item => item.analyst),
+            datasets: [{
+                label: "Total Assigned Work",
+                data: workload.map(item => item.total)
+            }]
+        },
+        options: getChartOptions()
+    });
+}
+
+function displayAnalystWorkloadTable(workload) {
+    const tableBody = document.querySelector("#analystWorkloadTable tbody");
+
+    tableBody.innerHTML = "";
+
+    workload.forEach(item => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${item.analyst}</td>
+            <td>🟦 ${"█".repeat(item.incidents)} ${item.incidents}</td>
+            <td>🟧 ${"█".repeat(item.vulnerabilities)} ${item.vulnerabilities}</td>
+            <td><strong>${item.total}</strong></td>
+        `;
+
+        tableBody.appendChild(row);
+    });
 }
 
 loadDashboard();

@@ -21,6 +21,7 @@ const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
 
 let allAssets = [];
+let editingAssetId = null;
 
 menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -43,16 +44,30 @@ document.addEventListener("click", (event) => {
 });
 
 newAssetButton.addEventListener("click", () => {
+    editingAssetId = null;
+    saveAssetButton.textContent = "Save Asset";
+
+    newHostname.value = "";
+    newIpAddress.value = "";
+    newOperatingSystem.value = "";
+    newOwner.value = "";
+    newCriticality.value = "Critical";
+    newAssetStatus.value = "Active";
+
     assetModal.classList.add("show");
 });
 
 cancelAssetButton.addEventListener("click", () => {
     assetModal.classList.remove("show");
+    editingAssetId = null;
+    saveAssetButton.textContent = "Save Asset";
 });
 
 window.addEventListener("click", (event) => {
     if (event.target === assetModal) {
         assetModal.classList.remove("show");
+        editingAssetId = null;
+        saveAssetButton.textContent = "Save Asset";
     }
 });
 
@@ -66,15 +81,28 @@ saveAssetButton.addEventListener("click", async () => {
         status: newAssetStatus.value
     };
 
-    await fetch("/api/assets", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(asset)
-    });
+    if (editingAssetId === null) {
+        await fetch("/api/assets", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(asset)
+        });
+    } else {
+        await fetch(`/api/assets/${editingAssetId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(asset)
+        });
+    }
 
     assetModal.classList.remove("show");
+
+    editingAssetId = null;
+    saveAssetButton.textContent = "Save Asset";
 
     newHostname.value = "";
     newIpAddress.value = "";
@@ -136,11 +164,17 @@ function displayAssets(assets) {
             <td>${asset.owner}</td>
             <td><span class="badge ${asset.criticality.toLowerCase()}">${asset.criticality}</span></td>
             <td><span class="status-badge">${asset.status}</span></td>
-            <td>
-                <button class="delete-button" data-id="${asset.id}">
-                    Delete
-                </button>
-            </td>
+      <td>
+    <div class="action-buttons">
+        <button class="edit-button" data-id="${asset.id}">
+            Edit
+        </button>
+
+        <button class="delete-button" data-id="${asset.id}">
+            Delete
+        </button>
+    </div>
+</td>
         `;
 
         row.addEventListener("click", () => {
@@ -148,6 +182,28 @@ function displayAssets(assets) {
         });
 
         tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".edit-button").forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const assetId = Number(button.getAttribute("data-id"));
+            const asset = allAssets.find(item => item.id === assetId);
+
+            editingAssetId = asset.id;
+
+            newHostname.value = asset.hostname;
+            newIpAddress.value = asset.ipAddress;
+            newOperatingSystem.value = asset.operatingSystem;
+            newOwner.value = asset.owner;
+            newCriticality.value = asset.criticality;
+            newAssetStatus.value = asset.status;
+
+            saveAssetButton.textContent = "Update Asset";
+
+            assetModal.classList.add("show");
+        });
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {

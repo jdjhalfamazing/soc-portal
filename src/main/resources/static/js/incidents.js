@@ -21,6 +21,7 @@ const userMenuButton = document.getElementById("userMenuButton");
 const userDropdown = document.getElementById("userDropdown");
 
 let allIncidents = [];
+let editingIncidentId = null;
 
 menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -43,16 +44,30 @@ document.addEventListener("click", (event) => {
 });
 
 newIncidentButton.addEventListener("click", () => {
+    editingIncidentId = null;
+    saveIncidentButton.textContent = "Save Incident";
+
+    incidentNumber.value = "";
+    incidentTitle.value = "";
+    incidentPriority.value = "Critical";
+    incidentStatus.value = "Open";
+    assignedTo.value = "";
+    incidentDescription.value = "";
+
     incidentModal.classList.add("show");
 });
 
 cancelIncidentButton.addEventListener("click", () => {
     incidentModal.classList.remove("show");
+    editingIncidentId = null;
+    saveIncidentButton.textContent = "Save Incident";
 });
 
 window.addEventListener("click", (event) => {
     if (event.target === incidentModal) {
         incidentModal.classList.remove("show");
+        editingIncidentId = null;
+        saveIncidentButton.textContent = "Save Incident";
     }
 });
 
@@ -66,15 +81,28 @@ saveIncidentButton.addEventListener("click", async () => {
         description: incidentDescription.value
     };
 
-    await fetch("/api/incidents", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(incident)
-    });
+    if (editingIncidentId === null) {
+        await fetch("/api/incidents", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(incident)
+        });
+    } else {
+        await fetch(`/api/incidents/${editingIncidentId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(incident)
+        });
+    }
 
     incidentModal.classList.remove("show");
+
+    editingIncidentId = null;
+    saveIncidentButton.textContent = "Save Incident";
 
     incidentNumber.value = "";
     incidentTitle.value = "";
@@ -141,14 +169,40 @@ function displayIncidents(incidents) {
                 </select>
             </td>
             <td>${incident.assignedTo}</td>
-            <td>
-                <button class="delete-button" data-id="${incident.id}">
-                    Delete
-                </button>
-            </td>
+          <td>
+    <div class="action-buttons">
+        <button class="edit-button" data-id="${incident.id}">
+            Edit
+        </button>
+
+        <button class="delete-button" data-id="${incident.id}">
+            Delete
+        </button>
+    </div>
+</td>
         `;
 
         tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".edit-button").forEach(button => {
+        button.addEventListener("click", () => {
+            const incidentId = Number(button.getAttribute("data-id"));
+            const incident = allIncidents.find(item => item.id === incidentId);
+
+            editingIncidentId = incident.id;
+
+            incidentNumber.value = incident.incidentNumber;
+            incidentTitle.value = incident.title;
+            incidentPriority.value = incident.priority;
+            incidentStatus.value = incident.status;
+            assignedTo.value = incident.assignedTo;
+            incidentDescription.value = incident.description;
+
+            saveIncidentButton.textContent = "Update Incident";
+
+            incidentModal.classList.add("show");
+        });
     });
 
     document.querySelectorAll(".status-select").forEach(select => {

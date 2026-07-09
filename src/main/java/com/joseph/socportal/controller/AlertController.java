@@ -36,6 +36,20 @@ public class AlertController {
         return alertService.saveAlert(alert);
     }
 
+    @PutMapping("/{id}")
+    public Alert updateAlert(@PathVariable Long id,
+            @RequestBody Alert updatedAlert) {
+
+        Alert alert = alertService.getAlertById(id);
+
+        alert.setSeverity(updatedAlert.getSeverity());
+        alert.setHost(updatedAlert.getHost());
+        alert.setTitle(updatedAlert.getTitle());
+        alert.setStatus(updatedAlert.getStatus());
+
+        return alertService.saveAlert(alert);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteAlert(@PathVariable Long id) {
         alertService.deleteAlert(id);

@@ -32,6 +32,7 @@ public class IncidentController {
 
         Incident incident = incidentService.getIncidentById(id);
 
+        incident.setIncidentNumber(updatedIncident.getIncidentNumber());
         incident.setTitle(updatedIncident.getTitle());
         incident.setPriority(updatedIncident.getPriority());
         incident.setStatus(updatedIncident.getStatus());
