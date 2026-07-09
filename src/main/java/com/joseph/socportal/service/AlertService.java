@@ -11,11 +11,15 @@ public class AlertService {
 
     private final AlertRepository alertRepository;
     private final NotificationService notificationService;
+    private final AuditLogService auditLogService;
 
     public AlertService(AlertRepository alertRepository,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            AuditLogService auditLogService) {
+
         this.alertRepository = alertRepository;
         this.notificationService = notificationService;
+        this.auditLogService = auditLogService;
     }
 
     public List<Alert> getAllAlerts() {
@@ -33,6 +37,11 @@ public class AlertService {
                 savedAlert.getSeverity().toLowerCase());
 
         System.out.println("NOTIFICATION COUNT: " + notificationService.getNotifications().size());
+        auditLogService.log(
+                "Joseph",
+                "Created",
+                "Alert",
+                savedAlert.getSeverity() + " alert created on " + savedAlert.getHost());
 
         return savedAlert;
     }
@@ -42,6 +51,15 @@ public class AlertService {
     }
 
     public void deleteAlert(Long id) {
+
+        Alert alert = getAlertById(id);
+
+        auditLogService.log(
+                "Joseph",
+                "Deleted",
+                "Alert",
+                alert.getTitle());
+
         alertRepository.deleteById(id);
     }
 }

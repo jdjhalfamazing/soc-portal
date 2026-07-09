@@ -11,11 +11,14 @@ public class AssetService {
 
     private final AssetRepository assetRepository;
     private final NotificationService notificationService;
+    private final AuditLogService auditLogService;
 
     public AssetService(AssetRepository assetRepository,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            AuditLogService auditLogService) {
         this.assetRepository = assetRepository;
         this.notificationService = notificationService;
+        this.auditLogService = auditLogService;
     }
 
     public List<Asset> getAllAssets() {
@@ -23,7 +26,6 @@ public class AssetService {
     }
 
     public Asset saveAsset(Asset asset) {
-
         Asset savedAsset = assetRepository.save(asset);
 
         notificationService.addNotification(
@@ -31,10 +33,24 @@ public class AssetService {
                 savedAsset.getHostname() + " has been added.",
                 "info");
 
+        auditLogService.log(
+                "Joseph",
+                "Created/Updated",
+                "Asset",
+                savedAsset.getHostname() + " - " + savedAsset.getIpAddress());
+
         return savedAsset;
     }
 
     public void deleteAsset(Long id) {
+        Asset asset = getAssetById(id);
+
+        auditLogService.log(
+                "Joseph",
+                "Deleted",
+                "Asset",
+                asset.getHostname());
+
         assetRepository.deleteById(id);
     }
 

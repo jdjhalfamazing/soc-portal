@@ -11,11 +11,14 @@ public class IncidentService {
 
     private final IncidentRepository incidentRepository;
     private final NotificationService notificationService;
+    private final AuditLogService auditLogService;
 
     public IncidentService(IncidentRepository incidentRepository,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            AuditLogService auditLogService) {
         this.incidentRepository = incidentRepository;
         this.notificationService = notificationService;
+        this.auditLogService = auditLogService;
     }
 
     public List<Incident> getAllIncidents() {
@@ -31,6 +34,12 @@ public class IncidentService {
                 savedIncident.getIncidentNumber() + " - " + savedIncident.getTitle(),
                 savedIncident.getPriority().toLowerCase());
 
+        auditLogService.log(
+                "Joseph",
+                "Created/Updated",
+                "Incident",
+                savedIncident.getIncidentNumber() + " - " + savedIncident.getTitle());
+
         return savedIncident;
     }
 
@@ -39,6 +48,15 @@ public class IncidentService {
     }
 
     public void deleteIncident(Long id) {
+
+        Incident incident = getIncidentById(id);
+
+        auditLogService.log(
+                "Joseph",
+                "Deleted",
+                "Incident",
+                incident.getIncidentNumber() + " - " + incident.getTitle());
+
         incidentRepository.deleteById(id);
     }
 }
