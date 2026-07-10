@@ -21,6 +21,11 @@ public class IncidentController {
         return incidentService.getAllIncidents();
     }
 
+    @GetMapping("/{id}")
+    public Incident getIncidentById(@PathVariable Long id) {
+        return incidentService.getIncidentById(id);
+    }
+
     @PostMapping
     public Incident createIncident(@RequestBody Incident incident) {
         return incidentService.saveIncident(incident);

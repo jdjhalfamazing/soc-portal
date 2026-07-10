@@ -1,6 +1,7 @@
 package com.joseph.socportal.controller;
 
 import com.joseph.socportal.model.Alert;
+import com.joseph.socportal.model.AlertDetailsResponse;
 import com.joseph.socportal.service.AlertService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,11 @@ public class AlertController {
     @GetMapping
     public List<Alert> getAllAlerts() {
         return alertService.getAllAlerts();
+    }
+
+    @GetMapping("/{id}")
+    public Alert getAlertById(@PathVariable Long id) {
+        return alertService.getAlertById(id);
     }
 
     @PostMapping
@@ -48,6 +54,11 @@ public class AlertController {
         alert.setStatus(updatedAlert.getStatus());
 
         return alertService.saveAlert(alert);
+    }
+
+    @GetMapping("/{id}/details")
+    public AlertDetailsResponse getAlertDetails(@PathVariable Long id) {
+        return alertService.getAlertDetails(id);
     }
 
     @DeleteMapping("/{id}")

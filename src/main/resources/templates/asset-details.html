@@ -11,14 +11,14 @@
 
 <body>
 
-<div th:replace="fragments/layout :: menuButton"></div>
+<div th:replace="~{fragments/layout :: menuButton}"></div>
 
-<div th:replace="fragments/layout :: sidebar"></div>
+<div th:replace="~{fragments/layout :: sidebar}"></div>
 
-<div th:replace="fragments/layout :: topbar(
+<div th:replace="~{fragments/layout :: topbar(
     'Asset Details',
     'Enterprise Asset Information'
-)"></div>
+)}"></div>
 
 <main>
 
@@ -98,6 +98,28 @@
                 <th>ID</th>
                 <th>Severity</th>
                 <th>Title</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+</section>
+
+<section class="alerts">
+
+    <div class="alerts-header">
+        <h2>Related Incidents</h2>
+    </div>
+
+    <table id="assetIncidentsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Incident #</th>
+                <th>Title</th>
+                <th>Priority</th>
                 <th>Status</th>
             </tr>
         </thead>

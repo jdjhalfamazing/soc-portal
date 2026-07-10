@@ -156,6 +156,12 @@ function displayIncidents(incidents) {
     incidents.forEach(incident => {
         const row = document.createElement("tr");
 
+        row.style.cursor = "pointer";
+
+        row.addEventListener("click", () => {
+            window.location.href = `/incidents/${incident.id}`;
+        });
+
         row.innerHTML = `
             <td>${incident.id}</td>
             <td>${incident.incidentNumber}</td>
@@ -186,7 +192,8 @@ function displayIncidents(incidents) {
     });
 
     document.querySelectorAll(".edit-button").forEach(button => {
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
             const incidentId = Number(button.getAttribute("data-id"));
             const incident = allIncidents.find(item => item.id === incidentId);
 
@@ -206,7 +213,8 @@ function displayIncidents(incidents) {
     });
 
     document.querySelectorAll(".status-select").forEach(select => {
-        select.addEventListener("change", async () => {
+        select.addEventListener("change", async (event) => {
+            event.stopPropagation();
             const incidentId = select.getAttribute("data-id");
 
             await fetch(`/api/incidents/${incidentId}/status`, {
@@ -228,7 +236,8 @@ function displayIncidents(incidents) {
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", async (event) => {
+            event.stopPropagation();
             const incidentId = button.getAttribute("data-id");
 
             await fetch(`/api/incidents/${incidentId}`, {

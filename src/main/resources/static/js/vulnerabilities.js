@@ -157,6 +157,12 @@ function displayVulnerabilities(vulnerabilities) {
     vulnerabilities.forEach(vuln => {
         const row = document.createElement("tr");
 
+        row.style.cursor = "pointer";
+
+        row.addEventListener("click", () => {
+            window.location.href = `/vulnerabilities/${vuln.id}`;
+        });
+
         row.innerHTML = `
             <td>${vuln.id}</td>
             <td>${vuln.cve}</td>
@@ -186,7 +192,9 @@ function displayVulnerabilities(vulnerabilities) {
     });
 
     document.querySelectorAll(".status-select").forEach(select => {
-        select.addEventListener("change", async () => {
+        select.addEventListener("change", async (event) => {
+            event.stopPropagation();
+
             const vulnId = select.getAttribute("data-id");
 
             await fetch(`/api/vulnerabilities/${vulnId}/status`, {
@@ -209,7 +217,8 @@ function displayVulnerabilities(vulnerabilities) {
 
     document.querySelectorAll(".edit-button").forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
 
             const vulnerabilityId = Number(button.getAttribute("data-id"));
 
@@ -232,7 +241,9 @@ function displayVulnerabilities(vulnerabilities) {
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
             const vulnId = button.getAttribute("data-id");
 
             await fetch(`/api/vulnerabilities/${vulnId}`, {

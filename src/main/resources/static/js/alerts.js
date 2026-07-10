@@ -165,6 +165,12 @@ function displayAlerts(alerts) {
 
         const row = document.createElement("tr");
 
+        row.style.cursor = "pointer";
+
+        row.addEventListener("click", () => {
+            window.location.href = `/alerts/${alert.id}`;
+        });
+
         row.innerHTML = `
             <td>${alert.id}</td>
             <td><span class="badge ${alert.severity.toLowerCase()}">${alert.severity}</span></td>
@@ -195,6 +201,9 @@ function displayAlerts(alerts) {
 
     document.querySelectorAll(".edit-button").forEach(button => {
         button.addEventListener("click", () => {
+
+            event.stopPropagation();
+
             const alertId = Number(button.getAttribute("data-id"));
             const alert = allAlerts.find(item => item.id === alertId);
 
@@ -212,7 +221,9 @@ function displayAlerts(alerts) {
     });
 
     document.querySelectorAll(".status-select").forEach(select => {
-        select.addEventListener("change", async () => {
+        select.addEventListener("change", async (event) => {
+
+            event.stopPropagation();
             const alertId = select.getAttribute("data-id");
 
             await fetch(`/api/alerts/${alertId}/status`, {
@@ -234,7 +245,9 @@ function displayAlerts(alerts) {
     });
 
     document.querySelectorAll(".delete-button").forEach(button => {
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", async (event) => {
+
+            event.stopPropagation();
             const alertId = button.getAttribute("data-id");
 
             await fetch(`/api/alerts/${alertId}`, {

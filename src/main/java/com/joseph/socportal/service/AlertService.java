@@ -3,6 +3,9 @@ package com.joseph.socportal.service;
 import com.joseph.socportal.model.Alert;
 import com.joseph.socportal.repository.AlertRepository;
 import org.springframework.stereotype.Service;
+import com.joseph.socportal.model.AlertDetailsResponse;
+import com.joseph.socportal.model.Asset;
+import com.joseph.socportal.repository.AssetRepository;
 
 import java.util.List;
 
@@ -12,14 +15,17 @@ public class AlertService {
     private final AlertRepository alertRepository;
     private final NotificationService notificationService;
     private final AuditLogService auditLogService;
+    private final AssetRepository assetRepository;
 
     public AlertService(AlertRepository alertRepository,
             NotificationService notificationService,
-            AuditLogService auditLogService) {
+            AuditLogService auditLogService,
+            AssetRepository assetRepository) {
 
         this.alertRepository = alertRepository;
         this.notificationService = notificationService;
         this.auditLogService = auditLogService;
+        this.assetRepository = assetRepository;
     }
 
     public List<Alert> getAllAlerts() {
@@ -61,5 +67,15 @@ public class AlertService {
                 alert.getTitle());
 
         alertRepository.deleteById(id);
+    }
+
+    public AlertDetailsResponse getAlertDetails(Long id) {
+        Alert alert = getAlertById(id);
+
+        Asset relatedAsset = assetRepository
+                .findByHostname(alert.getHost())
+                .orElse(null);
+
+        return new AlertDetailsResponse(alert, relatedAsset);
     }
 }

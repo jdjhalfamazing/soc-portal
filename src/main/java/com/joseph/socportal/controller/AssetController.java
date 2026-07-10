@@ -1,6 +1,7 @@
 package com.joseph.socportal.controller;
 
 import com.joseph.socportal.model.Asset;
+import com.joseph.socportal.model.AssetRelationships;
 import com.joseph.socportal.service.AssetService;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,11 @@ public class AssetController {
         asset.setStatus(updatedAsset.getStatus());
 
         return assetService.saveAsset(asset);
+    }
+
+    @GetMapping("/{id}/relationships")
+    public AssetRelationships getAssetRelationships(@PathVariable Long id) {
+        return assetService.getAssetRelationships(id);
     }
 
     @DeleteMapping("/{id}")
