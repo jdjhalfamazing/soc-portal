@@ -11,8 +11,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final AuditLogService auditLogService;
+
+    public UserService(
+            UserRepository userRepository,
+            AuditLogService auditLogService) {
+
         this.userRepository = userRepository;
+        this.auditLogService = auditLogService;
     }
 
     public List<User> getAllUsers() {
@@ -20,7 +26,16 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+
+        auditLogService.log(
+                "Joseph",
+                user.getId() == null ? "Created" : "Updated",
+                "User",
+                savedUser.getUsername());
+
+        return savedUser;
     }
 
     public User getUserById(Long id) {
@@ -34,6 +49,15 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+
+        User user = getUserById(id);
+
+        auditLogService.log(
+                "Joseph",
+                "Deleted",
+                "User",
+                user.getUsername());
+
         userRepository.deleteById(id);
     }
 }

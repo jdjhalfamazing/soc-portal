@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: menuButton}"></div>
+<div th:replace="~{fragments/layout :: sidebar}"></div>
+<div th:replace="~{fragments/layout :: topbar(
+    'User Management',
+    'Create and manage SOC Portal accounts'
+)}"></div>
+
+<main>
+
+    <section class="alerts">
+
+        <div class="alerts-header">
+            <h2>Users</h2>
+
+            <button id="newUserButton" class="new-alert-button">
+                + New User
+            </button>
+        </div>
+
+        <div class="filters">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search users...">
+
+            <select id="roleFilter">
+                <option value="">All Roles</option>
+                <option>ADMIN</option>
+                <option>ISSO</option>
+                <option>ANALYST</option>
+                <option>VIEWER</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option>Active</option>
+                <option>Disabled</option>
+                <option>Locked</option>
+            </select>
+
+        </div>
+
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+
+    </section>
+
+</main>
+
+<div id="userModal" class="modal">
+    <div class="modal-content">
+
+        <h2 id="userModalTitle">Create User</h2>
+
+        <input
+            type="text"
+            id="newUsername"
+            placeholder="Username">
+
+        <input
+            type="text"
+            id="newFullName"
+            placeholder="Full Name">
+
+        <input
+            type="email"
+            id="newEmail"
+            placeholder="Email">
+
+        <input
+            type="text"
+            id="newDepartment"
+            placeholder="Department">
+
+        <input
+            type="password"
+            id="newPassword"
+            placeholder="Password">
+
+        <select id="newRole">
+            <option>ADMIN</option>
+            <option>ISSO</option>
+            <option>ANALYST</option>
+            <option>VIEWER</option>
+        </select>
+
+        <select id="newUserStatus">
+            <option>Active</option>
+            <option>Disabled</option>
+            <option>Locked</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button id="saveUserButton">Save User</button>
+            <button id="cancelUserButton">Cancel</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="/js/notifications.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/users.js"></script>
+
+</body>
+</html>

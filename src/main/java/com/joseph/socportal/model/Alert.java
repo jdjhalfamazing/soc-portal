@@ -13,15 +13,30 @@ public class Alert {
     private String title;
     private String host;
     private String status;
+    private String indicator;
+
+    public String getIndicator() {
+        return indicator;
+    }
+
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
+    }
 
     public Alert() {
     }
 
-    public Alert(String severity, String title, String host, String status) {
+    public Alert(String severity,
+            String title,
+            String host,
+            String status,
+            String indicator) {
+
         this.severity = severity;
         this.title = title;
         this.host = host;
         this.status = status;
+        this.indicator = indicator;
     }
 
     public Long getId() {

@@ -8,6 +8,7 @@ const saveAlertButton = document.getElementById("saveAlertButton");
 
 const newSeverity = document.getElementById("newSeverity");
 const newHost = document.getElementById("newHost");
+const newIndicator = document.getElementById("newIndicator");
 const newTitle = document.getElementById("newTitle");
 const newStatus = document.getElementById("newStatus");
 
@@ -48,6 +49,7 @@ newAlertButton.addEventListener("click", () => {
 
     newSeverity.value = "Critical";
     newHost.value = "";
+    newIndicator.value = "";
     newTitle.value = "";
     newStatus.value = "Open";
 
@@ -72,6 +74,7 @@ saveAlertButton.addEventListener("click", async () => {
     const alert = {
         severity: newSeverity.value,
         host: newHost.value,
+        indicator: newIndicator.value.trim(),
         title: newTitle.value,
         status: newStatus.value
     };
@@ -100,6 +103,7 @@ saveAlertButton.addEventListener("click", async () => {
     saveAlertButton.textContent = "Save Alert";
 
     newHost.value = "";
+    newIndicator.value = "";
     newTitle.value = "";
 
     await loadAlerts();
@@ -128,6 +132,7 @@ function filterAlerts() {
     const filteredAlerts = allAlerts.filter(alert => {
         const matchesSearch =
             alert.host.toLowerCase().includes(search) ||
+            (alert.indicator || "").toLowerCase().includes(search) ||
             alert.title.toLowerCase().includes(search) ||
             alert.severity.toLowerCase().includes(search) ||
             alert.status.toLowerCase().includes(search);
@@ -175,6 +180,7 @@ function displayAlerts(alerts) {
             <td>${alert.id}</td>
             <td><span class="badge ${alert.severity.toLowerCase()}">${alert.severity}</span></td>
             <td>${alert.host}</td>
+            <td>${alert.indicator || "None"}</td>
             <td>${alert.title}</td>
             <td>
                 <select class="status-select" data-id="${alert.id}">
@@ -200,7 +206,7 @@ function displayAlerts(alerts) {
     });
 
     document.querySelectorAll(".edit-button").forEach(button => {
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
 
             event.stopPropagation();
 
@@ -211,6 +217,7 @@ function displayAlerts(alerts) {
 
             newSeverity.value = alert.severity;
             newHost.value = alert.host;
+            newIndicator.value = alert.indicator || "";
             newTitle.value = alert.title;
             newStatus.value = alert.status;
 
