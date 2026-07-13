@@ -887,3 +887,79 @@ td{
 .alerts {
     overflow-x: auto;
 }
+
+/* ===========================
+   Mobile Responsive
+=========================== */
+
+@media (max-width: 768px) {
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 90px 20px 20px 20px;
+    }
+
+    .topbar h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+
+    .topbar p {
+        font-size: 1rem;
+    }
+
+    .topbar-right {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .menu-button {
+        top: 15px;
+        left: 15px;
+    }
+
+    .summary {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 20px;
+        gap: 15px;
+    }
+
+    .alerts {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+
+    .notification-dropdown {
+        width: 300px;
+        right: -20px;
+    }
+
+    .user-menu-button,
+    .notification-button {
+        font-size: 14px;
+    }
+}
