@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOC Management</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: menuButton}"></div>
+<div th:replace="~{fragments/layout :: sidebar}"></div>
+<div th:replace="~{fragments/layout :: topbar(
+    'Indicators of Compromise',
+    'Track and investigate threat intelligence indicators'
+)}"></div>
+
+<main>
+
+    <section class="alerts">
+
+        <div class="alerts-header">
+            <h2>Indicators of Compromise</h2>
+
+            <button id="newIocButton" class="new-alert-button">
+                + New IOC
+            </button>
+        </div>
+
+        <div class="filters">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search indicators...">
+
+            <select id="typeFilter">
+                <option value="">All Types</option>
+                <option>IP Address</option>
+                <option>Domain</option>
+                <option>URL</option>
+                <option>MD5</option>
+                <option>SHA1</option>
+                <option>SHA256</option>
+                <option>Email</option>
+                <option>Registry Key</option>
+            </select>
+
+            <select id="threatLevelFilter">
+                <option value="">All Threat Levels</option>
+                <option>Critical</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option>Active</option>
+                <option>Monitoring</option>
+                <option>Blocked</option>
+                <option>Benign</option>
+            </select>
+
+        </div>
+
+        <table id="iocTable">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Value</th>
+                    <th>Type</th>
+                    <th>Threat Level</th>
+                    <th>Status</th>
+                    <th>Source</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+<div id="iocModal" class="modal">
+    <div class="modal-content">
+
+        <h2 id="iocModalTitle">Create IOC</h2>
+
+        <input
+            type="text"
+            id="newIocValue"
+            placeholder="Indicator value">
+
+        <select id="newIocType">
+            <option>IP Address</option>
+            <option>Domain</option>
+            <option>URL</option>
+            <option>MD5</option>
+            <option>SHA1</option>
+            <option>SHA256</option>
+            <option>Email</option>
+            <option>Registry Key</option>
+        </select>
+
+        <select id="newThreatLevel">
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <select id="newIocStatus">
+            <option>Active</option>
+            <option>Monitoring</option>
+            <option>Blocked</option>
+            <option>Benign</option>
+        </select>
+
+        <input
+            type="text"
+            id="newIocSource"
+            placeholder="Source">
+
+        <textarea
+            id="newIocDescription"
+            placeholder="Description"
+            rows="4"></textarea>
+
+        <div class="modal-buttons">
+            <button id="saveIocButton">Save IOC</button>
+            <button id="cancelIocButton">Cancel</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="/js/notifications.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/iocs.js"></script>
+
+</body>
+</html>
