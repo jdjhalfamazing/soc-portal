@@ -1,3 +1,4 @@
+<img width="1908" height="951" alt="Screenshot 2026-07-14 at 5 25 30 pm" src="https://github.com/user-attachments/assets/69fa6543-76f2-44f8-bb22-42121a51e453" />
 # 🛡️ SOC Portal
 
 A full-stack Security Operations Center (SOC) Portal built with Spring Boot, PostgreSQL, Thymeleaf, and Spring Security. This application simulates the daily workflow of security analysts by providing centralized management for alerts, incidents, assets, vulnerabilities, users, and audit logs.
@@ -9,20 +10,6 @@ A full-stack Security Operations Center (SOC) Portal built with Spring Boot, Pos
 ## 🚀 Live Demo
 
 https://soc-portal-2g2f.onrender.com
-
----
-
-## 📸 Screenshots
-
-> Add screenshots of:
-- Login Page
-- Dashboard
-- Alert Management
-- Incident Management
-- Asset Management
-- Vulnerability Management
-- User Management
-- Audit Log
 
 ---
 
