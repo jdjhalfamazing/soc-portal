@@ -207,34 +207,6 @@ src
 
 ---
 
-# Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/soc-portal.git
-```
-
-Navigate to the project
-
-```bash
-cd soc-portal
-```
-
-Run
-
-```bash
-mvn spring-boot:run
-```
-
-Open
-
-```
-http://localhost:8081
-```
-
----
-
 # Author
 
 **Joseph Jordan**
